@@ -27,12 +27,18 @@
     ]
   },
   "projects": {
+    "components": {
+      "tags": []
+    },
     "exchange-rate-dashboard": {
       "tags": []
     },
     "exchange-rate-dashboard-e2e": {
       "tags": [],
       "implicitDependencies": ["exchange-rate-dashboard"]
+    },
+    "hooks": {
+      "tags": []
     }
   }
 }

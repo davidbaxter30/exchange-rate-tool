@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@exchange-rate-tool/components": ["libs/components/src/index.ts"],
+      "@exchange-rate-tool/hooks": ["libs/hooks/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
