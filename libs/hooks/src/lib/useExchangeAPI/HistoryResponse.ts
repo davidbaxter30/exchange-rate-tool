@@ -2,6 +2,7 @@ export type HistoryResponse = {
   'Meta Data': MetaData;
   'Time Series FX (Daily)': TimeSeriesFXDaily;
   'Error Message'?: string;
+  Note?: string;
 };
 
 export type TimeSeriesFXDaily = {

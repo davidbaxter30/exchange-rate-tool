@@ -4,7 +4,11 @@ import {
   useCurrencyList,
   useExchangeAPI,
 } from '@exchange-rate-tool/hooks';
-import { ChartData, CurrencyChart } from '@exchange-rate-tool/components';
+import {
+  ChartData,
+  CurrencyChart,
+  ExchangedCurrency,
+} from '@exchange-rate-tool/components';
 
 import {
   Grid,
@@ -22,11 +26,13 @@ import {
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from './style';
 import { buildChartData } from './utilities/buildChartData';
+import LookupForm from './LookupForm/LookupForm';
 
 export const App = () => {
   const [chartData, setChartData] = useState<ChartData>();
   const [fromCurrency, setFromCurrency] = useState<string>('');
   const [toCurrency, setToCurrency] = useState<string>('');
+  const [amount, setAmount] = useState<number>(0);
   const [isDigital, setIsDigital] = useState<boolean>(false);
 
   const { physicalCurrencies, digitalCurrencies } = useCurrencyList();
@@ -78,17 +84,22 @@ export const App = () => {
     }
   };
 
+  const handleAmountChange = (
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>
+  ) => {
+    if (typeof event?.target.value === 'string') {
+      setAmount(parseFloat(event?.target.value));
+    }
+  };
+
   const toggleSource = () => {
     setToCurrency('');
     setFromCurrency('');
     setIsDigital((prevValue) => !prevValue);
   };
-
-  const buildMenuItem = (currency: Currency) => (
-    <MenuItem value={currency.code} key={currency.code}>
-      {currency.name}
-    </MenuItem>
-  );
 
   useEffect(() => {
     if (history && !(loadingHistory || errorHistory)) {
@@ -96,8 +107,19 @@ export const App = () => {
     }
   }, [errorHistory, history, loadingHistory]);
 
+  const lookupFormProps = {
+    fromCurrency,
+    toCurrency,
+    physicalCurrencies,
+    digitalCurrencies,
+    isDigital,
+    handleFromCurrencyChange,
+    handleToCurrencyChange,
+    handleAmountChange,
+  };
+
   return (
-    <Grid container spacing={3}>
+    <Grid container justifyContent="center" alignItems="center" spacing={3}>
       <Grid item xs={12}>
         <AppBar position="static" className={classes.appBar}>
           <Typography variant="h6" className={classes.title}>
@@ -106,55 +128,25 @@ export const App = () => {
         </AppBar>
       </Grid>
       <Grid item xs={12}>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="fromCurrency">Currency</InputLabel>
-          <Select
-            labelId="fromCurrency"
-            id="selectFromCurrency"
-            value={fromCurrency}
-            onChange={handleFromCurrencyChange}
-          >
-            <MenuItem value=""></MenuItem>
-            {isDigital
-              ? digitalCurrencies.map(buildMenuItem)
-              : physicalCurrencies.map(buildMenuItem)}
-          </Select>
-        </FormControl>
-
-        <FormControl className={classes.formControl}>
-          <InputLabel id="toCurrency">
-            {isDigital ? 'Market' : 'Currency'}
-          </InputLabel>
-          <Select
-            labelId="toCurrency"
-            id="selectToCurrency"
-            value={toCurrency}
-            onChange={handleToCurrencyChange}
-          >
-            <MenuItem value=""></MenuItem>
-            {physicalCurrencies.map((currency) => (
-              <MenuItem value={currency.code} key={currency.code}>
-                {currency.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <LookupForm {...lookupFormProps} />
       </Grid>
       <Grid item xs={12}>
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={getExchangeRate}
-          disabled={!toCurrency || !fromCurrency}
-        >
-          Get Exchange Rate
-        </Button>
-        <Button variant="contained" color="secondary" onClick={toggleSource}>
-          Switch to {isDigital ? 'Fiat' : 'Crypto'}
-        </Button>
+        <Grid spacing={3} justifyContent="center" alignItems="center" container>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={getExchangeRate}
+            disabled={!toCurrency || !fromCurrency}
+          >
+            Get Exchange Rate
+          </Button>
+          <Button variant="contained" color="secondary" onClick={toggleSource}>
+            Switch to {isDigital ? 'Fiat' : 'Crypto'}
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item>
         {(loadingHistory || loadingExchangeRate) && <CircularProgress />}
         {errorHistory && (
           <Card>
@@ -178,7 +170,12 @@ export const App = () => {
               )}
             </CardContent>
             <CardContent>
-              <strong>Current Exchange Rate:</strong> {exchangeRate}
+              <ExchangedCurrency
+                amount={amount}
+                rate={parseFloat(exchangeRate)}
+                fromName={fromCurrency}
+                toName={toCurrency}
+              />
             </CardContent>
           </Card>
         )}

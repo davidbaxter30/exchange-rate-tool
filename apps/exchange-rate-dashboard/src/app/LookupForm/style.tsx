@@ -1,18 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
-  appBar: {
-    borderRadius: '3px',
-    padding: '20px',
-  },
-  button: {
-    marginRight: '10px',
-  },
-  title: {
-    flexGrow: 1,
-  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+  },
+  text: {
+    margin: '16px 8px 8px',
+    fontSize: '18px',
   },
 }));

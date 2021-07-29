@@ -61,6 +61,7 @@ export const useExchangeAPI = () => {
         .get<HistoryResponse>(APIUrl)
         .then((response) => {
           console.log('getCurrencyHistory', response.data);
+
           if (response.data['Error Message']) {
             setErrorHistory(response.data['Error Message']);
           } else {

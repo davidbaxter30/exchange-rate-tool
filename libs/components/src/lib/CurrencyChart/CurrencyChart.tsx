@@ -6,11 +6,11 @@ type PropTypes = {
   chartData: ChartData;
   fromName: string;
   toName: string;
-}
+};
 
 export const CurrencyChart = ({ chartData, fromName, toName }: PropTypes) => {
-  const [originalFromName, setOriginalFromName] = useState<string>(fromName);
-  const [originalToName, setOriginalToname] = useState<string>(toName);
+  const [originalFromName] = useState<string>(fromName);
+  const [originalToName] = useState<string>(toName);
 
   return (
     <Plot
