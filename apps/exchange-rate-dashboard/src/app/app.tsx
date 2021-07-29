@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Currency,
-  useCurrencyList,
-  useExchangeAPI,
-} from '@exchange-rate-tool/hooks';
+import { useCurrencyList, useExchangeAPI } from '@exchange-rate-tool/hooks';
 import {
   ChartData,
   CurrencyChart,
@@ -18,10 +14,6 @@ import {
   CardHeader,
   CircularProgress,
   AppBar,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControl,
 } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from './style';
